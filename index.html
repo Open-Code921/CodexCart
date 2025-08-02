@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodexCart - Premium Code Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-center {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid transparent;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-btn {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            border: 2px solid #ffffff;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn.primary {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .nav-btn.primary:hover {
+            background: transparent;
+            color: #ffffff;
+        }
+
+        /* Page Management */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(10px, 10px); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.4); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            color: #cccccc;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Categories Section */
+        .categories {
+            padding: 5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #ffffff;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+        }
+
+        .category-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .category-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .category-card p {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-tag {
+            display: inline-block;
+            background: #ffffff;
+            color: #000000;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #ffffff;
+        }
+
+        /* Featured Products */
+        .featured {
+            background: #111111;
+            padding: 5rem 2rem;
+        }
+
+        .featured-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #444;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.2);
+            border-color: #ffffff;
+        }
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(45deg, #2a2a2a, #1a1a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h4 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .product-info p {
+            color: #cccccc;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .free-tag {
+            background: #666666;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid #888;
+        }
+
+        /* Custom Code Page */
+        .custom-page {
+            min-height: 100vh;
+            padding-top: 100px;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        }
+
+        .custom-hero {
+            padding: 3rem 2rem;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .custom-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .custom-hero p {
+            font-size: 1.3rem;
+            color: #cccccc;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .process-section {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .process-step {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #444;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover {
+            border-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .process-step h3 {
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .process-step p {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .request-form-section {
+            background: #111111;
+            padding: 4rem 2rem;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .request-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid #444;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #444;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .pricing-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #444;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-info h3 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-list {
+            list-style: none;
+        }
+
+        .pricing-list li {
+            color: #cccccc;
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .pricing-list li::before {
+            content: '•';
+            color: #ffffff;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Footer */
+        .footer {
+            background: #000000;
+            padding: 3rem 2rem 1rem;
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: #cccccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1, .custom-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p, .custom-hero p {
+                font-size: 1.2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .nav-center, .nav-right {
+                display: none;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .mobile-menu {
+                display: block;
+                background: none;
+                border: 1px solid #ffffff;
+                color: #ffffff;
+                padding: 0.5rem;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <nav class="nav">
+        <div class="logo">CodexCart</div>
+        <ul class="nav-links">
+            <li><a href="Home.html" onclick="showPage('home')">Home</a></li>
+            <li><a href="Categories.html" onclick="showPage('categories')">Categories</a></li>
+            <li><a href="Marketplace.html" onclick="showPage('Marketplace')">Marketplace</a></li>
+            <li><a href="Custom%20code.html" onclick="showPage('custom')">Custom Code</a></li>
+            <li><a href="login.html" onclick="showPage('Login')">Login</a></li>
+        </ul>
+        <button class="mobile-menu" onclick="toggleMobileMenu()">☰</button>
+    </nav>
+</header>
+
+<!-- Home Page -->
+<div id="home" class="page active">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Premium Code Marketplace</h1>
+            <p>Discover, purchase, and customize high-quality code solutions for your projects</p>
+            <div class="cta-buttons">
+                <a href="Marketplace.html" onclick="showPage('Marketplace')" class="btn btn-primary">Browse Code</a>
+                <a href="Custom%20code.html" onclick="showPage('custom')" class="btn btn-secondary">Request Custom</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <h2 class="section-title">Code Categories</h2>
+        <div class="category-grid">
+            <div class="category-card fade-in stagger-1">
+                <div class="category-icon">🌐</div>
+                <h3>Web Development</h3>
+                <p>Modern web applications, responsive designs, and interactive user interfaces built with the latest technologies.</p>
+                <span class="price-tag">From $00.0</span>
+            </div>
+            <div class="category-card fade-in stagger-2">
+                <div class="category-icon">📱</div>
+                <h3>Mobile Apps</h3>
+                <p>Cross-platform mobile applications for iOS and Android with native performance and beautiful UIs.</p>
+                <span class="price-tag">From $00.0</span>
+            </div>
+            <div class="category-card fade-in stagger-3">
+                <div class="category-icon">🤖</div>
+                <h3>AI & Machine Learning</h3>
+                <p>Intelligent algorithms, data processing scripts, and machine learning models for various applications.</p>
+                <span class="price-tag">From $00.0</span>
+            </div>
+            <div class="category-card fade-in stagger-4">
+                <div class="category-icon">🛠️</div>
+                <h3>Developer Tools</h3>
+                <p>Productivity tools, code generators, and automation scripts to streamline your development workflow.</p>
+                <span class="price-tag">From $00.0</span>
+            </div>
+            <div class="category-card fade-in stagger-1">
+                <div class="category-icon">🎮</div>
+                <h3>Game Development</h3>
+                <p>Game engines, physics simulations, and interactive entertainment applications for multiple platforms.</p>
+                <span class="price-tag">From $00.0</span>
+            </div>
+            <div class="category-card fade-in stagger-2">
+                <div class="category-icon">💼</div>
+                <h3>Business Solutions</h3>
+                <p>Enterprise-grade applications, CRM systems, and business automation tools for modern companies.</p>
+                <span class="price-tag">From $00.0</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured">
+        <div class="featured-content">
+            <h2 class="section-title">Featured Code</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-image">⚡</div>
+                    <div class="product-info">
+                        <h4>Lightning Fast API</h4>
+                        <p>High-performance REST API with built-in caching and rate limiting</p>
+                        <div class="product-price">
+                            <span class="price">$00.0</span>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Get Code</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">🎨</div>
+                    <div class="product-info">
+                        <h4>Modern Dashboard</h4>
+                        <p>Beautiful, responsive admin dashboard with dark/light theme support</p>
+                        <div class="product-price">
+                            <span class="free-tag">FREE</span>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Download</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">🔐</div>
+                    <div class="product-info">
+                        <h4>Auth System Pro</h4>
+                        <p>Complete authentication system with JWT, OAuth, and 2FA support</p>
+                        <div class="product-price">
+                            <span class="price">$00.0</span>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Get Code</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">📊</div>
+                    <div class="product-info">
+                        <h4>Data Visualizer</h4>
+                        <p>Interactive charts and graphs library with real-time data updates</p>
+                        <div class="product-price">
+                            <span class="free-tag">FREE</span>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Download</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">🚀</div>
+                    <div class="product-info">
+                        <h4>E-commerce Engine</h4>
+                        <p>Full-featured online store with payment processing and inventory management</p>
+                        <div class="product-price">
+                            <span class="price">$00.0</span>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Get Code</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">🧠</div>
+                    <div class="product-info">
+                        <h4>AI Chat Bot</h4>
+                        <p>Intelligent chatbot with natural language processing and learning capabilities</p>
+                        <div class="product-price">
+                            <span class="price">$00.0</span>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Get Code</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
