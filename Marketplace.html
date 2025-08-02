@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodexCart - Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Header - Matching your exact design */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid transparent;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-links a.active {
+            border: 1px solid #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-btn {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            border: 2px solid #ffffff;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-left: 1rem;
+        }
+
+        .nav-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn.primary {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .nav-btn.primary:hover {
+            background: transparent;
+            color: #ffffff;
+        }
+
+        .mobile-menu {
+            display: none;
+            background: none;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2a2a2a 100%);
+            position: relative;
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(10px, 10px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Hero Section */
+        .marketplace-hero {
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .hero-content-overlay {
+            position: relative;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .marketplace-hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.4); }
+        }
+
+        .marketplace-hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            color: #cccccc;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Search Bar */
+        .search-section {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #444;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .search-bar::placeholder {
+            color: #cccccc;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #cccccc;
+            font-size: 1.2rem;
+        }
+
+        /* Categories */
+        .categories-section {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .category-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #444;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .category-chip:hover,
+        .category-chip.active {
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Products Grid */
+        .products-section {
+            padding: 2rem 0;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #ffffff;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+        }
+
+        .product-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .product-description {
+            color: #cccccc;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .product-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid #444;
+        }
+
+        .product-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .stars {
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #000000;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Featured Section */
+        .featured-section {
+            background: #111111;
+            padding: 5rem 2rem;
+            margin: 4rem 0;
+            position: relative;
+        }
+
+        .featured-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.2;
+        }
+
+        .featured-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .featured-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .featured-content p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #000000;
+            padding: 3rem 2rem 1rem;
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: #cccccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #666;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .marketplace-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content-overlay {
+                padding: 2rem 1rem;
+                margin: 0 1rem;
+            }
+
+            .marketplace-hero {
+                min-height: 50vh;
+            }
+
+            .marketplace-hero p {
+                font-size: 1.2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .categories-section {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header - Exact match to your design -->
+<header class="header">
+    <nav class="nav">
+        <div class="logo">CodexCart</div>
+        <ul class="nav-links">
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="Categories.html">Categories</a></li>
+            <li><a href="Marketplace.html" class="active">Marketplace</a></li>
+            <li><a href="Custom%20code.html">Custom Code</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+        <button class="mobile-menu">☰</button>
+    </nav>
+</header>
+
+<main class="main-content">
+    <!-- Hero Section -->
+    <section class="marketplace-hero">
+        <video class="hero-video-background" autoplay muted loop playsinline>
+            <source src="marketplace-demo.mp4" type="video/mp4">
+            <source src="marketplace-demo.webm" type="video/webm">
+        </video>
+        <div class="container">
+            <div class="hero-content-overlay">
+                <h1>Code Marketplace</h1>
+                <p>Discover premium code solutions, scripts, and applications built by expert developers</p>
+
+                <div class="search-section">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-bar" placeholder="Search for scripts, components, templates...">
+                </div>
+
+                <div class="categories-section">
+                    <a href="#all" class="category-chip active">All</a>
+                    <a href="#web" class="category-chip">Web Development</a>
+                    <a href="#mobile" class="category-chip">Mobile Apps</a>
+                    <a href="#ai" class="category-chip">AI & ML</a>
+                    <a href="#tools" class="category-chip">Developer Tools</a>
+                    <a href="#games" class="category-chip">Game Development</a>
+                    <a href="#business" class="category-chip">Business Solutions</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <div class="container">
+            <h2 class="section-title">Featured Products</h2>
+            <div class="products-grid">
+                <div class="product-card fade-in stagger-1" data-product-id="ecommerce-dashboard">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">Advanced E-commerce Dashboard</h3>
+                            <div class="product-price">$89.00</div>
+                        </div>
+                    </div>
+                    <p class="product-description">Complete React dashboard with analytics, user management, and payment integration. Fully responsive and customizable with modern UI components.</p>
+                    <div class="product-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">Dashboard</span>
+                        <span class="tag">E-commerce</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="rating">
+                            <span class="stars">★★★★★</span>
+                            <span>4.9 (127)</span>
+                        </div>
+                        <span>1.2k downloads</span>
+                    </div>
+                    <div class="product-actions">
+                        <a href="Error%20page.html" class="btn btn-primary">Get Code</a>
+                        <a href="#" class="btn btn-secondary" target="_blank">Preview</a>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in stagger-2" data-product-id="ai-chatbot">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">AI Chatbot Engine</h3>
+                            <div class="product-price">$45.00</div>
+                        </div>
+                    </div>
+                    <p class="product-description">Python-based intelligent chatbot with natural language processing, machine learning capabilities, and easy API integration.</p>
+                    <div class="product-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">AI/ML</span>
+                        <span class="tag">NLP</span>
+                        <span class="tag">API</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="rating">
+                            <span class="stars">★★★★☆</span>
+                            <span>4.7 (89)</span>
+                        </div>
+                        <span>856 downloads</span>
+                    </div>
+                    <div class="product-actions">
+                        <a href="Error%20page.html" class="btn btn-primary">Get Code</a>
+                        <a href="#" class="btn btn-secondary" target="_blank">Preview</a>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in stagger-3" data-product-id="dashboard-ui-kit">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">Searching Number in An Array</h3>
+                            <div class="product-price">FREE</div>
+                        </div>
+                    </div>
+                    <p class="product-description">This Programme lets you enter  numbers in an array and and the number you wnt to find and display the number if found or not </p>
+                    <div class="product-tags">
+                        <span class="tag">Java</span>
+                        <span class="tag">Arrays</span>
+                        <span class="tag">Input and Output</span>
+                        <span class="tag">Responsive</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="rating">
+                            <span class="stars">★★★★★</span>
+                            <span>4.8 (By Developer)</span>
+                        </div>
+                        <span>Limited Edition</span>
+                    </div>
+                    <div class="product-actions">
+                        <a href="Programmes/Searching an number from Array.java" class="btn btn-primary" download="Searching an number from Array.java">Download</a>
+                        <a href="Error%20page.html" class="btn btn-secondary" target="_blank">Preview</a>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in stagger-4" data-product-id="api-boilerplate">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">REST API Boilerplate</h3>
+                            <div class="product-price">$39.00</div>
+                        </div>
+                    </div>
+                    <p class="product-description">Node.js/Express API starter with JWT authentication, database integration, rate limiting, and comprehensive documentation.</p>
+                    <div class="product-tags">
+                        <span class="tag">Node.js</span>
+                        <span class="tag">Express</span>
+                        <span class="tag">API</span>
+                        <span class="tag">MongoDB</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="rating">
+                            <span class="stars">★★★★★</span>
+                            <span>4.9 (156)</span>
+                        </div>
+                        <span>967 downloads</span>
+                    </div>
+                    <div class="product-actions">
+                        <a href="Error%20page.html" class="btn btn-primary">Get Code</a>
+                        <a href="#" class="btn btn-secondary" target="_blank">Preview</a>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in stagger-1" data-product-id="mobile-app">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">Cross-Platform Mobile App</h3>
+                            <div class="product-price">$79.00</div>
+                        </div>
+                    </div>
+                    <p class="product-description">React Native application template with navigation, state management, push notifications, and native device integration.</p>
+                    <div class="product-tags">
+                        <span class="tag">React Native</span>
+                        <span class="tag">Mobile</span>
+                        <span class="tag">iOS</span>
+                        <span class="tag">Android</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="rating">
+                            <span class="stars">★★★★☆</span>
+                            <span>4.6 (74)</span>
+                        </div>
+                        <span>432 downloads</span>
+                    </div>
+                    <div class="product-actions">
+                        <a href="Error%20page.html" class="btn btn-primary">Get Code</a>
+                        <a href="#" class="btn btn-secondary" target="_blank">Preview</a>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in stagger-2" data-product-id="data-viz">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">Data Visualization Library</h3>
+                            <div class="product-price">$59.00</div>
+                        </div>
+                    </div>
+                    <p class="product-description">Advanced JavaScript charting library with interactive visualizations, real-time updates, and customizable themes.</p>
+                    <div class="product-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">D3.js</span>
+                        <span class="tag">Charts</span>
+                        <span class="tag">Visualization</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="rating">
+                            <span class="stars">★★★★★</span>
+                            <span>4.8 (98)</span>
+                        </div>
+                        <span>721 downloads</span>
+                    </div>
+                    <div class="product-actions">
+                        <a href="Error%20page.html" class="btn btn-primary">Get Code</a>
+                        <a href="#" class="btn btn-secondary" target="_blank">Preview</a>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in stagger-3" data-product-id="game-framework">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">Game Development Framework</h3>
+                            <div class="product-price">$125.00</div>
+                        </div>
+                    </div>
+                    <p class="product-description">Complete 2D game engine with physics, animation system, asset management, and cross-platform deployment tools.</p>
+                    <div class="product-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Canvas</span>
+                        <span class="tag">Game Engine</span>
+                        <span class="tag">Physics</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="rating">
+                            <span class="stars">★★★★☆</span>
+                            <span>4.5 (45)</span>
+                        </div>
+                        <span>289 downloads</span>
+                    </div>
+                    <div class="product-actions">
+                        <a href="Error%20page.html" class="btn btn-primary">Get Code</a>
+                        <a href="#" class="btn btn-secondary" target="_blank">Preview</a>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in stagger-4" data-product-id="smart-contracts">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">Blockchain Smart Contracts</h3>
+                            <div class="product-price">$95.00</div>
+                        </div>
+                    </div>
+                    <p class="product-description">Ethereum smart contract templates for tokens, NFTs, DeFi applications with security best practices and gas optimization.</p>
+                    <div class="product-tags">
+                        <span class="tag">Solidity</span>
+                        <span class="tag">Ethereum</span>
+                        <span class="tag">Smart Contracts</span>
+                        <span class="tag">DeFi</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="rating">
+                            <span class="stars">★★★★★</span>
+                            <span>4.9 (67)</span>
+                        </div>
+                        <span>543 downloads</span>
+                    </div>
+                    <div class="product-actions">
+                        <a href="Error%20page.html" class="btn btn-primary">Get Code</a>
+                        <a href="#" class="btn btn-secondary" target="_blank">Preview</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Section -->
+    <section class="featured-section">
+        <div class="featured-content">
+            <h2>Become a Code Seller</h2>
+            <p>Share your expertise with thousands of developers worldwide. Upload your code, set your price, and start earning from your programming skills.</p>
+            <a href="#" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Start Selling Today</a>
+        </div>
+    </section>

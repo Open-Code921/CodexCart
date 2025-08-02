@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error: Page Not Found - CODEXCART</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 50px;
+        }
+
+        .brand {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .error-content {
+            flex: 1;
+        }
+
+        .error-title {
+            font-size: 120px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            letter-spacing: 5px;
+        }
+
+        .error-message {
+            font-size: 32px;
+            margin-bottom: 40px;
+            line-height: 1.2;
+        }
+
+        .back-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(45deg, #ff5252, #26c6da);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        .art-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .page-not-found-art {
+            font-size: 80px;
+            font-weight: 900;
+            color: #333;
+            transform: rotate(-15deg);
+            text-shadow:
+                2px 2px 0 #444,
+                4px 4px 0 #555,
+                6px 6px 0 #666,
+                8px 8px 0 #777;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .page-text {
+            color: #666;
+        }
+
+        .not-text {
+            color: #888;
+        }
+
+        .found-text {
+            color: white;
+            font-style: italic;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: rotate(-15deg) translateY(0px); }
+            50% { transform: rotate(-15deg) translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .brand {
+                position: static;
+                margin-bottom: 40px;
+            }
+
+            .error-title {
+                font-size: 80px;
+                margin-bottom: 20px;
+            }
+
+            .error-message {
+                font-size: 24px;
+                margin-bottom: 30px;
+            }
+
+            .page-not-found-art {
+                font-size: 60px;
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="brand">CODEXCART</div>
+
+<div class="container">
+    <div class="error-content">
+        <div class="error-title">Error: /> ;</div>
+        <div class="error-message">
+            Payment services are not available right now.Till then try our free<br>
+            codes.Don't Worry!!!!
+        </div>
+        <a href="Home.html" class="back-button">Back to Home</a>
+    </div>
+
+    <div class="art-section">
+        <div class="page-not-found-art">
+            <span class="page-text">PAGE</span><br>
+            <span class="not-text">NOT</span><br>
+            <span class="found-text">FOUND</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function goHome() {
+        // Replace with your actual home page URL
+        window.location.href = '/';
+    }
+
+    // Add some interactive effects
+    document.addEventListener('mousemove', (e) => {
+        const art = document.querySelector('.page-not-found-art');
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+        art.style.transform = `rotate(-15deg) translateX(${x}px) translateY(${y}px)`;
+    });
+</script>
+</body>
+</html>
