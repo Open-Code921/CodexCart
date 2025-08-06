@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodexCart - Payment & Gift Cards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+
+
+        /* Main Content */
+        .main-content {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2a2a2a 100%);
+            position: relative;
+        }
+
+        /* Notice Banner */
+        .notice-banner {
+            background: linear-gradient(135deg, #ff4444 0%, #cc3333 100%);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 3px solid #aa2222;
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+            position: relative;
+        }
+
+        .notice-banner::before {
+            content: '⚠️';
+            margin-right: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .notice-banner .notice-text {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(10px, 10px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Hero Section */
+        .payment-hero {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .payment-hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.4); }
+        }
+
+        .payment-hero p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            color: #cccccc;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Payment Options */
+        .payment-options {
+            padding: 3rem 0;
+        }
+
+        .cancel-payment {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            color: #ff4444;
+            border: 2px solid #ff4444;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-cancel:hover {
+            background: #ff4444;
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.3);
+        }
+
+        .btn-cancel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 68, 68, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-cancel:hover::before {
+            left: 100%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .payment-method {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-method::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #ffffff;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .payment-method:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+        }
+
+        .payment-method:hover::before {
+            transform: scaleX(1);
+        }
+
+        .payment-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        .payment-method h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .payment-method p {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-method .benefits {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .payment-method .benefits li {
+            color: #cccccc;
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .payment-method .benefits li::before {
+            content: '✓';
+            color: #ffffff;
+            position: absolute;
+            left: 0;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Brand Gift Cards Showcase */
+        .gift-card-showcase {
+            background: #111111;
+            padding: 5rem 2rem;
+            margin: 4rem 0;
+            position: relative;
+        }
+
+        .gift-card-showcase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.2;
+        }
+
+        .gift-card-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .gift-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .gift-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .gift-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #ffffff, #cccccc);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .gift-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.15);
+            border-color: #ffffff;
+        }
+
+        .gift-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .brand-logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .brand-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: #cccccc;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .accepted-amounts {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .accepted-amounts h4 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .amounts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .amount-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #ffffff;
+            border: 1px solid #444;
+        }
+
+        /* Payment Form */
+        .payment-form-section {
+            padding: 4rem 0;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .payment-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid #444;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #444;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Security Badge */
+        .security-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid #444;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .security-info h4 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .security-info p {
+            color: #cccccc;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+
+
+            .payment-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .payment-hero p {
+                font-size: 1.2rem;
+            }
+
+            .payment-methods-grid,
+            .gift-cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .payment-form {
+                padding: 2rem 1rem;
+            }
+
+            .amounts {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+<main class="main-content">
+    <!-- Notice Banner -->
+    <div class="notice-banner">
+        <div class="notice-text">Payment feature is currently not available. This page is for demonstration purposes only.</div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="payment-hero">
+        <div class="container">
+            <h1>Payment & Gift Cards</h1>
+            <p>Pay with popular brand gift cards you already have! Convert your unused gift cards into premium code access.</p>
+        </div>
+    </section>
+
+    <!-- Payment Methods -->
+    <section class="payment-options">
+        <div class="container">
+            <div class="cancel-payment">
+                <a href="index.html" class="btn-cancel">✕ Cancel Payment</a>
+            </div>
+            <h2 class="section-title">Payment Methods</h2>
+            <div class="payment-methods-grid">
+                <div class="payment-method fade-in stagger-1">
+                    <div class="payment-icon">🎁</div>
+                    <h3>Brand Gift Cards (Recommended)</h3>
+                    <p>Use gift cards from major retailers like Walmart, Target, Steam, and more. We accept most popular brand gift cards!</p>
+                    <ul class="benefits">
+                        <li>Use existing gift cards</li>
+                        <li>Instant verification</li>
+                        <li>Most brands accepted</li>
+                        <li>Secure exchange process</li>
+                    </ul>
+                    <a href="paymenterror.html" class="btn btn-primary">Use Gift Card</a>
+                </div>
+
+                <div class="payment-method fade-in stagger-2">
+                    <div class="payment-icon">💳</div>
+                    <h3>Credit/Debit Cards</h3>
+                    <p>Pay directly with your credit or debit card. Secure checkout with industry-standard encryption.</p>
+                    <ul class="benefits">
+                        <li>Instant payment processing</li>
+                        <li>All major cards accepted</li>
+                        <li>Secure SSL encryption</li>
+                        <li>Transaction history</li>
+                    </ul>
+                    <a href="paymenterror.html" class="btn btn-secondary">Pay with Card</a>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand Gift Cards Showcase -->
+    <section class="gift-card-showcase">
+        <div class="gift-card-content">
+            <h2 class="section-title">Accepted Gift Card Brands</h2>
+            <div class="gift-cards-grid">
+                <div class="gift-card fade-in stagger-1">
+                    <div class="brand-logo">🛒</div>
+                    <div class="brand-name">Walmart</div>
+                    <div class="card-description">Use your Walmart gift cards to purchase premium code and scripts.</div>
+                    <div class="accepted-amounts">
+                        <h4>Accepted Amounts:</h4>
+                        <div class="amounts">
+                            <span class="amount-tag">$10</span>
+                            <span class="amount-tag">$25</span>
+                            <span class="amount-tag">$50</span>
+                            <span class="amount-tag">$100</span>
+                            <span class="amount-tag">$200</span>
+                        </div>
+                    </div>
+                    <a href="paymenterror.html" class="btn btn-primary">Use Walmart Card</a>
+                </div>
+
+                <div class="gift-card fade-in stagger-2">
+                    <div class="brand-logo">🎮</div>
+                    <div class="brand-name">Steam</div>
+                    <div class="card-description">Convert your Steam wallet cards into CodexCart credits for code purchases.</div>
+                    <div class="accepted-amounts">
+                        <h4>Accepted Amounts:</h4>
+                        <div class="amounts">
+                            <span class="amount-tag">$5</span>
+                            <span class="amount-tag">$10</span>
+                            <span class="amount-tag">$20</span>
+                            <span class="amount-tag">$50</span>
+                            <span class="amount-tag">$100</span>
+                        </div>
+                    </div>
+                    <a href="paymenterror.html" class="btn btn-primary">Use Steam Card</a>
+                </div>
+
+                <div class="gift-card fade-in stagger-3">
+                    <div class="brand-logo">🎯</div>
+                    <div class="brand-name">Target</div>
+                    <div class="card-description">Target gift cards accepted for all CodexCart purchases and subscriptions.</div>
+                    <div class="accepted-amounts">
+                        <h4>Accepted Amounts:</h4>
+                        <div class="amounts">
+                            <span class="amount-tag">$10</span>
+                            <span class="amount-tag">$25</span>
+                            <span class="amount-tag">$50</span>
+                            <span class="amount-tag">$100</span>
+                            <span class="amount-tag">$250</span>
+                        </div>
+                    </div>
+                    <a href="paymenterror.html" class="btn btn-primary">Use Target Card</a>
+                </div>
+
+                <div class="gift-card fade-in stagger-4">
+                    <div class="brand-logo">🛍️</div>
+                    <div class="brand-name">Amazon</div>
+                    <div class="card-description">Amazon gift cards provide instant access to our premium code marketplace.</div>
+                    <div class="accepted-amounts">
+                        <h4>Accepted Amounts:</h4>
+                        <div class="amounts">
+                            <span class="amount-tag">$15</span>
+                            <span class="amount-tag">$25</span>
+                            <span class="amount-tag">$50</span>
+                            <span class="amount-tag">$100</span>
+                            <span class="amount-tag">$200</span>
+                        </div>
+                    </div>
+                    <a href="paymenterror.html" class="btn btn-primary">Use Amazon Card</a>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Form -->
+    <section class="payment-form-section">
+        <div class="container">
+            <div class="form-container">
+                <h2 class="section-title">Complete Your Purchase</h2>
+
+                <div class="security-info">
+                    <h4>🔒 Secure Exchange</h4>
+                    <p>Your gift card information is encrypted and secure. We verify all cards instantly and safely.</p>
+                </div>
+
+                <form class="payment-form">
+                    <div class="form-group">
+                        <label for="payment-type">Payment Method *</label>
+                        <select id="payment-type" name="payment-type" required>
+                            <option value="">Select Payment Method</option>
+                            <option value="walmart" selected>Walmart Gift Card</option>
+                            <option value="steam">Steam Gift Card</option>
+                            <option value="target">Target Gift Card</option>
+                            <option value="amazon">Amazon Gift Card</option>
+                            <option value="credit-card">Credit/Debit Card</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name *</label>
+                            <input type="text" id="first-name" name="first-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name *</label>
+                            <input type="text" id="last-name" name="last-name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="card-code">Gift Card Code/Number *</label>
+                            <input type="text" id="card-code" name="card-code" placeholder="Enter your gift card code" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-amount">Gift Card Amount *</label>
+                            <input type="number" id="card-amount" name="card-amount" placeholder="Enter amount on card" min="5" required>
+                        </div>
+                    </div>
+
+                    <a <button href="paymenterror.html" type="submit" class="btn btn-primary">Complete Payment</button> </a>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
