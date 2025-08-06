@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodexCart - Payment Error</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .error-container {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2a2a2a 100%);
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(10px, 10px); }
+        }
+
+        .error-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        /* Error Icon */
+        .error-icon {
+            font-size: 8rem;
+            margin-bottom: 2rem;
+            color: #ff4444;
+            text-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Error Title */
+        .error-title {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ff4444;
+            text-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 68, 68, 0.3); }
+            to { text-shadow: 0 0 30px rgba(255, 68, 68, 0.6), 0 0 40px rgba(255, 68, 68, 0.4); }
+        }
+
+        /* Error Message */
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .error-description {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: #cccccc;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Error Box */
+        .error-box {
+            background: rgba(255, 68, 68, 0.1);
+            border: 2px solid #ff4444;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #ff4444, #cc3333);
+        }
+
+        .error-box h3 {
+            color: #ff4444;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .error-box p {
+            color: #ffffff;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Button Styling */
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            margin: 0 1rem;
+        }
+
+        .btn-home {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+
+        .btn-home:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #cccccc;
+            border: 2px solid #cccccc;
+        }
+
+        .btn-back:hover {
+            background: #cccccc;
+            color: #000000;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(204, 204, 204, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        /* Additional Info */
+        .additional-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid #444;
+            margin-top: 3rem;
+            text-align: left;
+        }
+
+        .additional-info h4 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .additional-info ul {
+            color: #cccccc;
+            line-height: 1.8;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .additional-info li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .additional-info li::before {
+            content: '•';
+            color: #ff4444;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.2s; }
+        .stagger-2 { animation-delay: 0.4s; }
+        .stagger-3 { animation-delay: 0.6s; }
+        .stagger-4 { animation-delay: 0.8s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .error-title {
+                font-size: 2.5rem;
+            }
+
+            .error-message {
+                font-size: 1.2rem;
+            }
+
+            .error-description {
+                font-size: 1rem;
+            }
+
+            .error-icon {
+                font-size: 6rem;
+            }
+
+            .btn {
+                font-size: 1rem;
+                padding: 0.8rem 2rem;
+                margin: 0.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .error-content {
+                padding: 0 1rem;
+            }
+
+            .error-box {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <div class="error-content">
+        <!-- Error Icon -->
+        <div class="error-icon fade-in">⚠️</div>
+
+        <!-- Error Title -->
+        <h1 class="error-title fade-in stagger-1">Payment Error</h1>
+
+        <!-- Error Message -->
+        <p class="error-message fade-in stagger-2">Your payment cannot be processed</p>
+        <p class="error-description fade-in stagger-2">We're sorry, but the payment option you selected is currently not available. This feature is under development and will be available soon.</p>
+
+        <!-- Error Details Box -->
+        <div class="error-box fade-in stagger-3">
+            <h3>🚫 Payment Service Unavailable</h3>
+            <p>The payment processing system is currently offline for maintenance. Please try again later or contact support for assistance.</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-group fade-in stagger-4">
+            <a <button href="index.html" class="btn btn-home" onclick="goHome()">🏠 Back to Home</button> </a>
+            <a <button href="payments.html" class="btn btn-back" onclick="goBack()">↶ Go Back</button> </a>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="additional-info fade-in stagger-4">
+            <h4>What you can do:</h4>
+            <ul>
+                <li>Return to the homepage to explore other features</li>
+                <li>Check back later when payment services are restored</li>
+                <li>Contact our support team for alternative payment options</li>
+                <li>Browse our code marketplace without making purchases</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Navigation functions
+    function goHome() {
+        // In a real application, this would redirect to your actual homepage
+        alert('Redirecting to homepage...');
+        // Example: window.location.href = 'index.html';
+    }
+
+    function goBack() {
+        // Go back to previous page
+        window.history.back();
+    }
+
+    // Add some interactive feedback
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add click feedback to buttons
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    });
+</script>
+</body>
+</html>
